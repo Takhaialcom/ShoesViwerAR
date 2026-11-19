@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>&lt;shoes&gt; </title>
+    <title>&lt;shoes&gt;</title>
     <meta charset="utf-8">
-    <meta name="description" content="&lt;shoes&gt; ">
+    <meta name="description" content="&lt;shoes&gt;">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" href="./styles.css" rel="stylesheet"/>
   </head>
   <body>
     <!-- <model-viewer> HTML element -->
-    <model-viewer src="model.glb" ios-src="model.usdz" scale="0.25 0.25 0.25" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" poster="poster.webp" shadow-intensity="1">
+    <model-viewer id="mv" src="model.glb" ios-src="model.usdz" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" poster="poster.webp" shadow-intensity="1">
       <div class="progress-bar hide" slot="progress-bar">
           <div class="update-bar"></div>
       </div>
@@ -19,8 +19,24 @@
       <div id="ar-prompt">
           <img src="ar_hand_prompt.png">
       </div>
-    </model-viewer>  
+    </model-viewer>
+
     <script src="script.js"></script>
+    <script>
+      const mv = document.getElementById('mv');
+      // الحجم المستهدف لأكبر بُعد في الموديل (1 = 1 متر، ويمكن تغييره إلى 0.25 للربع)
+      const targetMaxSize = 1;
+
+      mv.addEventListener('load', () => {
+        const dims = mv.getDimensions(); // يعيد { x, y, z } بالأمتار
+        const maxDim = Math.max(dims.x, dims.y, dims.z);
+
+        if (maxDim > 0) {
+          const factor = targetMaxSize / maxDim;
+          mv.scale = `${factor} ${factor} ${factor}`;
+        }
+      });
+    </script>
     <!-- Loads <model-viewer> for browsers: -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.4.0/model-viewer.min.js"></script>
   </body>
